@@ -13,8 +13,8 @@
 <body>
     <div id="app">
         <div class="container">
-            <div class="row">
-                <button class="btn btn-primary" v-for="menu in menuList" :id="menu.id">{{ menu.value }}</button>
+            <div class="row" v-for="menu in menuList">
+                <button class="btn btn-primary" :id="menu.id">{{ menu.value }}</button>
             </div>
         </div>
         
