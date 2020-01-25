@@ -15,7 +15,7 @@
         <div class="form-container container">
             <form>
                 <select class="form-control" v-model="selectValue">
-                    <option v-for="menu in menuList" :value="cn.id">{{ cn.name }}</option>
+                    <option v-for="menu in menuList" :value="menu".id">{{ menu.value }}</option>
                 </select>
             </form>
             <div>{{ selectValue }}</div>
