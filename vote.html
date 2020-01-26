@@ -19,8 +19,8 @@
             <div class="row">
                 <form>
                     <div class="form-check" v-for="player in playerList">
-                        <input class="form-check-input" type="radio" name="vote" v-model="vote" :value="player.id" :disabled="player.disabled">
-                        <label class="form-check-label" :for="player.name">
+                        <input class="form-check-input" type="radio" name="vote" v-model="vote" :id="player.id" :value="player.id" :disabled="player.disabled">
+                        <label class="form-check-label" :for="player.id">
                             {{player.name}}
                         </label>
                     </div>
