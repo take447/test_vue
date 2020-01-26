@@ -23,7 +23,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="vote" v-model="vote" :id="player.id" :value="player" :disabled="player.disabled">
                                 <label class="form-check-label" :for="player.id">
-                                    {{player.name}}<span class="badge-danger" v-if="player.disabled == true">×</span>
+                                    {{player.name}}<span class="badge badge-pill badge-danger" v-if="player.disabled == true">不在</span>
                                 </label>
                             </div>
                         </li>
