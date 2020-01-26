@@ -23,7 +23,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="vote" v-model="vote" :id="player.id" :value="player.id" :disabled="player.disabled">
                                 <label class="form-check-label" :for="player.id">
-                                    {{player.name}}
+                                    {{player.name}}<span class="badge" v-if="player.disabled == true">死亡</span>
                                 </label>
                             </div>
                         </li>
