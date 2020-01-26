@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-with, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="content-type" content="text/html; charset = UTF-8">
+    <title>LINE人狼メニュー</title>
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="row">
+                <div class="h5">【LINE人狼】投票</div>
+            </div>
+            <div class="row">
+                <form>
+                    <div class="form-check" v-for="player in playerList">
+                        <input class="form-check-input" type="radio" v-model="vote" :id="player.id" :value="player.name">
+                        <label class="form-check-label" :for="player.name">
+                            {{player.name}}
+                        </label>>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{vote}}
+    </div>
+        
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                playerList:[
+                    {id:"1",name:"プレイヤー１"},
+                    {id:"2",name:"プレイヤー２"},
+                    {id:"3",name:"プレイヤー３"},
+                    {id:"4",name:"プレイヤー４"},
+                ],
+            vote:""
+            }
+        })
+    </script>
+</body>
+
+</html>
