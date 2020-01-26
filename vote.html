@@ -12,14 +12,14 @@
 
 <body>
     <div id="app">
+
+    <div class="sticky-top h5 mx-auto">【LINE人狼】投票</div>
+  
         <form>
             <div class="container">
                 <div class="row">
-                    <div class="h5">【LINE人狼】投票</div>
-                </div>
-                <div class="row">
                     <ul class="list-group">
-                        <li class="list-group-item" v-for="player in playerList">                   
+                        <li class="list-group-item col-12" v-for="player in playerList">                   
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="vote" v-model="vote" :id="player.id" :value="player.id" :disabled="player.disabled">
                                 <label class="form-check-label" :for="player.id">
