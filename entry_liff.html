@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-with, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="content-type" content="text/html; charset = UTF-8">
+    <title>【LINE人狼】参加</title>
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
+</head>
+
+<body class="my-5">
+    <div id="app">
+        <div class="fixed-top h5 bg-info text-white mx-auto">{{myname}} > メニュー > 参加 </div>
+        <div class="container" v-show="isShow">
+            <form class="form">
+                <div class="form-row">
+                    <div class="form-check form-check-inline col-12">
+                        <div class="col-5">
+                            <input v-model="type" class="form-check-input" type="radio" name="radio" id="radio1" value="player" checked>
+                            <label class="form-check-label" for="radio1">プレイヤー</label>
+                        </div>
+                        <div class="col-5">
+                            <input v-model="type" class="form-check-input" type="radio" name="radio" id="radio2" value="stand">
+                            <label class="form-check-label" for="radio2">スタンド</label>   
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group-inline col-12">
+                        <label>名前</label>
+                        <input v-model="cn" class="col-8" type="text" class="form-control" id="cn" placeholder="ゲーム中の名前">
+
+                    </div>
+                </div>
+            </form>
+            <button type="button" class="btn btn-primary btn-lg btn-block fixed-bottom" v-if="cn != ''" @click="enter">{{type}}名【{{cn}}】で参加する</button>
+        </div>
+    </div>
+        
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                myid: '',
+                myname: '',
+                type:'player',
+                cn:'kari',
+                isShow: true
+            },
+            mounted :function(){
+                liff
+                .init({
+                    liffId: "1575215646-mrgAB4wN" // use own liffId
+                })
+                .then(() => {
+                    // Start to use liff's api
+                    liff.getProfile()
+                        .then(profile => {
+                            this.myid = profile.userId;
+                            this.myname = profile.displayName;
+
+
+                        })
+                        .catch((err) => {
+                        console.log('error', err);
+                        });
+                })
+                .catch((err) => {
+                    // Error happens during initialization
+                    console.log(err.code, err.message);
+                });
+
+                axios.get('https://script.google.com/macros/s/AKfycbxQiWmxIl9R7HP8b-cHHJYkCpvLp23PHjyGU5zziGvruw-JxwNh/exec')
+                .then(response => {this.playerList = response.data ; console.log(response.data);})
+                .catch(response => console.log(response))
+            },
+            methods:{
+                enter: function(){
+                    this.isShow = false;
+                    liff.sendMessages([
+                        {
+                            type:'text',
+                            text:'【' + cn + '】で参加しました'
+                        }
+                        ])
+                        .then(() => {
+                            liff.closeWindow();
+                        })
+                        .catch((err) => {
+                            console.log('error', err);
+                        });
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
