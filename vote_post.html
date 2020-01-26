@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-with, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="content-type" content="text/html; charset = UTF-8">
+    <title>LINE人狼メニュー</title>
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
+</head>
+
+<body class="my-5">
+    <div id="app">
+
+    <div class="fixed-top h5 bg-info text-white text-center mx-auto">【LINE人狼】投票</div>
+  
+        <form>
+            <div class="container">
+                <div class="row">
+                    <ul class="list-group col-12">
+                        <li class="list-group-item" v-for="player in playerList">                   
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="vote" v-model="vote" :id="player.id" :value="player" :disabled="player.disabled">
+                                <label class="form-check-label" :for="player.id">
+                                    {{player.name}}<span class="badge badge-pill badge-danger" v-if="player.disabled == true">不在</span>
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
+               </div>
+            </div>
+        </form>
+        <button type="button" class="btn btn-primary btn-lg btn-block fixed-bottom" v-if="vote != ''">{{vote.name}}に投票する</button>
+    </div>
+        
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                playerList:[],
+                vote:""
+            },
+            mounted :function(){
+                axios.get('https://jsonplaceholder.typicode.com/users')
+                .then(response => console.log(response))
+                .catch(response => console.log(response))
+            }
+        })
+    </script>
+</body>
+
+</html>
