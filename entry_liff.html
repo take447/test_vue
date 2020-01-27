@@ -15,27 +15,30 @@
         <div class="fixed-top h5 bg-info text-white mx-auto">{{myname}} > メニュー > 参加 </div>
         <div class="container" v-show="isShow">
             <form class="form">
-                <div class="form-row">
-                    <div class="form-check form-check-inline col-12">
-                        <div class="col-5">
-                            <input v-model="type" class="form-check-input" type="radio" name="radio" id="radio1" value="player" checked>
-                            <label class="form-check-label" for="radio1">プレイヤー</label>
-                        </div>
-                        <div class="col-5">
-                            <input v-model="type" class="form-check-input" type="radio" name="radio" id="radio2" value="stand">
-                            <label class="form-check-label" for="radio2">スタンド</label>   
-                        </div>
+                <div class="form-group">
+                    <label class="control-label">参加・スタンド選択</label>
+                    <div class="form-check">
+                        <input v-model="info.type" class="form-check-input" type="radio" name="radio" id="radio1" value="player" checked>
+                        <label class="form-check-label" for="radio1">プレイヤー</label>
+                    </div>
+                    <div class="form-check">
+                        <input v-model="info.type" class="form-check-input" type="radio" name="radio" id="radio2" value="stand">
+                        <label class="form-check-label" for="radio2">スタンド</label>   
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group-inline col-12">
-                        <label>名前</label>
-                        <input v-model="cn" class="col-8" type="text" class="form-control" id="cn" placeholder="ゲーム中の名前">
-
-                    </div>
+                <div class="form-group">
+                    <label class="control-label">ゲーム中の名前</label>
+                    <input v-model="info.cn" class="col-12" type="text" class="form-control" id="cn" placeholder="5文字程度">
+                </div>
+               <div class="form-group" v-show="info.type =='stand'">
+                    <label class="control-label">プレイヤーコード</label>
+                    <input v-model="info.code" class="col-12" type="text" class="form-control" id="cn" placeholder="数字">
                 </div>
             </form>
-            <button type="button" class="btn btn-primary btn-lg btn-block fixed-bottom" v-if="cn != ''" @click="enter">{{type}}名【{{cn}}】で参加する</button>
+
+
+
+            <button type="button" class="btn btn-primary btn-lg btn-block fixed-bottom" v-if="(info.cn !='' && ( info.type == 'player' || info.code != '' ))" @click="enter">参加する</button>
         </div>
     </div>
         
@@ -50,11 +53,15 @@
         var app = new Vue({
             el: '#app',
             data: {
-                myid: '',
-                myname: '',
-                type:'player',
-                cn:'kari',
-                isShow: true
+                info: {
+                    myid: '',
+                    myname: '',
+                    type:'player',
+                    cn:'',
+                    code:''
+                },
+                isShow: true,
+                isStand:false
             },
             mounted :function(){
                 liff
@@ -65,8 +72,8 @@
                     // Start to use liff's api
                     liff.getProfile()
                         .then(profile => {
-                            this.myid = profile.userId;
-                            this.myname = profile.displayName;
+                            this.info.myid = profile.userId;
+                            this.info.myname = profile.displayName;
 
 
                         })
@@ -86,12 +93,28 @@
             methods:{
                 enter: function(){
                     this.isShow = false;
-                    liff.sendMessages([
-                        {
-                            type:'text',
-                            text:'【' + this.cn + '】で参加しました'
-                        }
-                        ])
+                    var mes = [];
+                    if(this.info.type == 'player'){
+                        mes[0] = {
+                            type: 'text',
+                            text:'キャラクターネーム【' + this.info.cn + '】でプレイヤーとして参加しました'
+                        };
+                        mes[1] ={
+                            type: 'text',
+                            text:info.myid
+                         }
+                         mes[2] ={
+                            type: 'text',
+                            text:'スタンドをつける場合は上記コードを伝えてください'
+                         }
+                    }else{
+                        mes[0] = {
+                            type: 'text',
+                            text:'キャラクターネーム【' + this.info.cn + '】でスタンドとして参加しました'
+                        };
+                    }
+
+                    liff.sendMessages(mes)
                         .then(() => {
                             liff.closeWindow();
                         })
