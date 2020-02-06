@@ -86,7 +86,7 @@
                     console.log(err.code, err.message);
                 });
 
-                axios.get('https://script.google.com/macros/s/AKfycbxQiWmxIl9R7HP8b-cHHJYkCpvLp23PHjyGU5zziGvruw-JxwNh/exec')
+                axios.get('https://script.google.com/macros/s/AKfycbxvqRLTLZ1gV08329xgRRxaVrFErZypUDbb1TFeFqHA6JpVyXw/exec')
                 .then(response => {this.playerList = response.data ; console.log(response.data);})
                 .catch(response => console.log(response))
             },
