@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-with, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="content-type" content="text/html; charset = UTF-8">
+    <title>【LINE人狼】参加</title>
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
+</head>
+
+<body class="my-5">
+    <div id="app">
+        <div class="fixed-top h5 bg-info text-white mx-auto">{{data.name}} > メニュー > 参加 </div>
+        <div class="container" v-show="isShow">
+            <form class="form">
+                <div class="form-group">
+                    <label class="control-label">プレイヤー・スタンド選択</label>
+                    <div class="form-check">
+                        <input v-model="data.type" class="form-check-input" type="radio" name="radio" id="radio1" value="player" checked>
+                        <label class="form-check-label" for="radio1">プレイヤー</label>
+                    </div>
+                    <div class="form-check">
+                        <input v-model="data.type" class="form-check-input" type="radio" name="radio" id="radio2" value="stand">
+                        <label class="form-check-label" for="radio2">スタンド</label>   
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">ゲーム中の名前</label>
+                    <input v-model="data.cn" class="col-12" type="text" class="form-control" id="cn" placeholder="5文字程度">
+                </div>
+               <div class="form-group" v-show="data.type =='stand'">
+                    <label class="control-label">プレイヤーコード</label>
+                    <input v-model="data.code" class="col-12" type="text" class="form-control" id="cn" placeholder="数字">
+                </div>
+            </form>
+
+            <div>{{err}}</div>
+
+
+
+            <button type="button" class="btn btn-primary btn-lg btn-block fixed-bottom" v-if="(data.cn !='' && ( data.type == 'player' || data.code != '' ))" @click="enter">参加する</button>
+        </div>{{err}}</div>
+    </div>
+        
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                data: {
+                    liffMode: 'entry',
+                    uid: '',
+                    name: '',
+                    type:'player',
+                    cn:'',
+                    code:''
+                },
+                isShow: true,
+                isStand:false,
+                err:''
+            },
+            mounted :function(){
+                liff
+                .init({
+                    liffId: "1653830188-BYgGge8Y" // use own liffId
+                })
+                .then(() => {
+                    // Start to use liff's api
+                    liff.getProfile()
+                        .then(profile => {
+                            this.data.uid = profile.userId;
+                            this.data.name = profile.displayName;
+
+
+                        })
+                        .catch((err) => {
+                        console.log('error', err);
+                        });
+                })
+                .catch((err) => {
+                    // Error happens during initialization
+                    console.log(err.code, err.message);
+                });
+
+
+            },
+            methods:{
+                enter: function(){
+                    this.isShow = false;
+
+                    //データをpostして
+                    axios.post('https://script.google.com/macros/s/AKfycbxvqRLTLZ1gV08329xgRRxaVrFErZypUDbb1TFeFqHA6JpVyXw/exec',JSON.stringify(this.data))
+                    .then(response => {
+                        //正常にできた処理
+
+
+                        var mes = [];
+                        if(this.data.type == 'player'){
+                            mes[0] = {
+                                type: 'text',
+                                text:'キャラクターネーム【' + this.data.cn + '】でプレイヤーとして参加しました'
+                            };
+                        }else{
+                            mes[0] = {
+                                type: 'text',
+                                text:'キャラクターネーム【' + this.data.cn + '】でスタンドとして参加しました'
+                            };
+                        }
+
+                        liff.sendMessages(mes)
+                            .then(() => {
+                                liff.closeWindow();
+                            })
+                            .catch((err) => {
+                                console.log('error', err);
+                            });
+
+                    })
+                    .catch(response => {console.log(response);this.err = JSON.stringify(response)});
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
